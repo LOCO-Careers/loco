@@ -6,20 +6,35 @@ LOCO is a career record your existing AI agent can read and write. No new app, n
 new tab. Your agent proposes; you decide what's accurate; you choose what, if
 anything, becomes visible to anyone else.
 
-This repository holds the **POTS methodology** as an installable agent skill. The
-server it talks to lives at `https://mcp.loco.careers/mcp`.
+This repository is both the **POTS methodology** as an installable agent skill and
+a **Claude Code plugin** bundling that skill with the server. The server lives at
+`https://mcp.loco.careers/mcp`.
 
 ---
 
 ## Install
 
-**1. Connect the server** — pick the client you actually use:
+### Claude Code — one plugin
 
 ```bash
-# Claude Code
-claude mcp add --transport http loco https://mcp.loco.careers/mcp
+claude plugin marketplace add LOCO-Careers/loco
+```
 
-# VS Code / GitHub Copilot
+```bash
+claude plugin install loco@loco
+```
+
+That installs the skill *and* connects the server. Restart Claude Code, then sign
+in when your first LOCO call opens a browser window.
+
+### Every other client — two steps
+
+The plugin format is Claude Code's. Everywhere else, connect the server and add
+the skill separately.
+
+**1. Connect the server:**
+
+```bash
 code --add-mcp '{"name":"loco","url":"https://mcp.loco.careers/mcp"}'
 ```
 
@@ -34,9 +49,11 @@ mode.
 npx skills add LOCO-Careers/loco
 ```
 
-Or copy `skills/loco/` into your client's skills directory.
+Or copy `skills/loco/` into your client's skills directory. If your client has no
+skill mechanism at all, LOCO still works — the tool descriptions carry the rules,
+though the methodology is thinner without the skill.
 
-**3. Say to your agent:**
+### Then say to your agent
 
 > Set up my LOCO.
 

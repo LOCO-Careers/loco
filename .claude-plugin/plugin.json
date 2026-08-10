@@ -1,0 +1,19 @@
+{
+  "name": "loco",
+  "version": "0.2.0",
+  "description": "A career record your agent can read and write, using the POTS method — Phase, Objectives, Tasks, SEDOs. Bundles the LOCO methodology skill with the hosted MCP server at https://mcp.loco.careers/mcp, so one install gives your agent both the tools and the judgement to use them. Captures work as it happens instead of reconstructing it under pressure months later. Your agent proposes; you confirm what's accurate; nothing becomes public unless you publish it yourself — there is deliberately no publish tool. Sign-in happens in your browser on first use.",
+  "author": {
+    "name": "Ese Kpeji",
+    "url": "https://loco.careers"
+  },
+  "homepage": "https://loco.careers",
+  "repository": "https://github.com/LOCO-Careers/loco",
+  "license": "Apache-2.0",
+  "keywords": [
+    "career",
+    "evidence",
+    "portfolio",
+    "pots",
+    "professional-development"
+  ]
+}

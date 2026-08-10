@@ -1,0 +1,21 @@
+{
+  "name": "loco",
+  "description": "LOCO — the career layer your agent talks through. POTS methodology plus the hosted career-record MCP server.",
+  "owner": {
+    "name": "Ese Kpeji",
+    "url": "https://loco.careers"
+  },
+  "plugins": [
+    {
+      "name": "loco",
+      "description": "A career record your agent can read and write, using the POTS method — Phase, Objectives, Tasks, SEDOs. Bundles the LOCO methodology skill with the hosted MCP server, so one install gives your agent both the tools and the judgement to use them. Your agent proposes; you confirm; nothing becomes public unless you publish it yourself.",
+      "author": {
+        "name": "Ese Kpeji",
+        "url": "https://loco.careers"
+      },
+      "source": "./",
+      "category": "productivity",
+      "homepage": "https://loco.careers"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "loco": {
+      "type": "http",
+      "url": "https://mcp.loco.careers/mcp"
+    }
+  }
+}
