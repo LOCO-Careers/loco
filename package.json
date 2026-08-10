@@ -12,7 +12,10 @@
   "files": [
     "bin",
     "skills",
+    "mcp.json",
     ".mcp.json",
+    "plugin.json",
+    ".claude-plugin",
     "README.md",
     "LICENSE",
     "NOTICE"

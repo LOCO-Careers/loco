@@ -14,6 +14,17 @@ a **Claude Code plugin** bundling that skill with the server. The server lives a
 
 ## Install
 
+This repository is a conformant **[Agent Plugin](https://agent-plugins.org)** —
+root `plugin.json`, skills in `skills/`, MCP server in `mcp.json`. In a client that
+speaks the standard (ChatGPT, Codex, Cursor, GitHub Copilot, Kiro, VS Code),
+installing the plugin connects the server *and* teaches the methodology in one step.
+
+Claude Code uses its own plugin format, so `.claude-plugin/` is here too. Both
+manifests describe the same plugin; they exist because the ecosystem has two
+discovery conventions, not because there are two LOCOs.
+
+### Anywhere — one command
+
 ```bash
 npx loco-careers
 ```
