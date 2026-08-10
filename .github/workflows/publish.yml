@@ -1,0 +1,93 @@
+# Publishes loco-careers to npm from this repository, not from anyone's laptop.
+#
+# Authentication is OIDC (npm Trusted Publisher), so there is no NPM_TOKEN in this
+# repo and none to leak. npm trusts a token minted for this exact workflow file in
+# this exact repository — which is why renaming this file breaks publishing until
+# the trusted publisher config is updated to match.
+#
+# This package writes to people's agent config files. That makes the supply chain
+# the threat model, so the release path is deliberately narrow: a published
+# GitHub Release, a version that must match its tag, and a smoke test that has to
+# pass before anything reaches the registry.
+
+name: Publish to npm
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Pack and test without publishing'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  id-token: write # required for OIDC — without it npm cannot verify the publisher
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      # Trusted publishing needs a newer npm than the one bundled with Node 22.
+      - name: Use an npm that speaks OIDC
+        run: npm install -g npm@latest
+
+      # A tag that disagrees with package.json is how the wrong code ends up
+      # published under the right-looking version. Fail before the registry sees it.
+      - name: Version must match the release tag
+        if: github.event_name == 'release'
+        run: |
+          PKG=$(node -p "require('./package.json').version")
+          TAG=${GITHUB_REF_NAME#v}
+          echo "package.json=$PKG  tag=$TAG"
+          [ "$PKG" = "$TAG" ] || { echo "::error::package.json ($PKG) does not match tag ($TAG)"; exit 1; }
+
+      # The manifests are the whole product for six clients. A typo here fails
+      # silently at install time, in someone else's terminal, so check them here.
+      - name: Validate plugin manifests
+        run: |
+          node -e "
+            const fs = require('fs');
+            const p = JSON.parse(fs.readFileSync('plugin.json'));
+            const m = JSON.parse(fs.readFileSync('mcp.json'));
+            const fail = (msg) => { console.error('::error::' + msg); process.exit(1); };
+            if (p['\$schema'] !== 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json') fail('plugin.json \$schema wrong');
+            if (!/^[a-z0-9]([a-z0-9.-]{0,62}[a-z0-9])?\$/.test(p.name) || /(--|\.\.)/.test(p.name)) fail('plugin name invalid');
+            if (m['\$schema'] !== 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json') fail('mcp.json \$schema wrong');
+            const s = m.mcpServers && m.mcpServers.loco;
+            if (!s) fail('mcp.json has no loco server');
+            if (s.type !== 'streamable-http') fail('transport must be streamable-http, not ' + s.type);
+            if (!String(s.url).startsWith('https://')) fail('server url must be https');
+            if (s.headers) fail('headers are visible package data and must not be shipped');
+            if (!fs.existsSync('skills/loco/SKILL.md')) fail('skill missing');
+            console.log('manifests ok');
+          "
+
+      # Install the tarball exactly as a user would, into a throwaway HOME, and
+      # confirm it does something. Publishing a CLI that crashes on start is the
+      # one failure nobody catches before it reaches five people at once.
+      - name: Smoke test the packed tarball
+        run: |
+          npm pack
+          TARBALL=$(ls loco-careers-*.tgz)
+          mkdir -p /tmp/smoke && cd /tmp/smoke && npm init -y >/dev/null
+          npm install "$GITHUB_WORKSPACE/$TARBALL" >/dev/null
+          export LOCO_TEST_HOME=/tmp/fakehome && mkdir -p "$LOCO_TEST_HOME"
+          npx loco-careers --help | grep -q 'install LOCO' || { echo "::error::--help broken"; exit 1; }
+          NO_COLOR=1 npx loco-careers --dry-run | tee /tmp/out.txt
+          grep -q 'mcp.loco.careers' /tmp/out.txt || { echo "::error::dry run did not report the server"; exit 1; }
+          [ -z "$(ls -A "$LOCO_TEST_HOME")" ] || { echo "::error::--dry-run wrote files"; exit 1; }
+          echo "smoke test passed"
+
+      - name: Publish
+        if: github.event_name == 'release' || inputs.dry_run == false
+        run: npm publish --access public --provenance
