@@ -14,7 +14,19 @@ a **Claude Code plugin** bundling that skill with the server. The server lives a
 
 ## Install
 
-### Claude Code — one plugin
+```bash
+npx loco-careers
+```
+
+Finds the agent clients on your machine — Claude Code, Claude Desktop, Cursor,
+Windsurf, VS Code — connects the server and installs the skill. Restart your
+client, then say **"Set up my LOCO."**
+
+It only ever adds a server named `loco`, backs up any file it edits, and refuses
+to overwrite a different server that already has that name. `--dry-run` shows you
+every change first. The whole thing is one readable file: [`bin/loco.mjs`](bin/loco.mjs).
+
+### Claude Code — as a plugin instead
 
 ```bash
 claude plugin marketplace add LOCO-Careers/loco
@@ -24,10 +36,9 @@ claude plugin marketplace add LOCO-Careers/loco
 claude plugin install loco@loco
 ```
 
-That installs the skill *and* connects the server. Restart Claude Code, then sign
-in when your first LOCO call opens a browser window.
+Same result, through Claude Code's own packaging.
 
-### Every other client — two steps
+### By hand
 
 The plugin format is Claude Code's. Everywhere else, connect the server and add
 the skill separately.
