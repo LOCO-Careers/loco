@@ -159,6 +159,27 @@ artifacts. Show them the result and offer `loco_confirm`.
 
 Phrasing guidance and worked examples: `references/evidence.md`.
 
+## Planning — the forward half of POTS
+
+Tasks and SEDOs run forwards too: the plan is the next few things that close the
+gap between where they are and their objectives. `loco_set_plan` records what they
+have AGREED to do; `loco_log_work` records what they DID. Never confuse the two.
+
+- Propose a deliberately small plan — one to three items, each with a `rationale`
+  naming the gap it closes, and say which you are least sure of. At most five can
+  be open; the frontier is the next few things, never a backlog.
+- **A plan is not a record.** Never describe a planned item as logged, achieved or
+  completed. It completes only when real work fulfils it — `loco_log_work` with
+  `fulfils_plan_item_id` — and the person confirms both sides. Until then it is
+  "planned".
+- Work toward an item (`plan_item_id`) is not fulfilment. Research, drafts and
+  rehearsals move a SEDO forward without finishing it.
+- Planning is optional. Unplanned work is captured normally, and someone who stops
+  at direction and objectives has a complete state. Never fabricate a link to make
+  the plan look tidy.
+- Dropping an item is their decision, with a reason — it is career history, not
+  deletion.
+
 ## Sessions — booking the next one
 
 **Career reflection has no deadline, so it loses to everything that does.** Nobody
@@ -222,6 +243,7 @@ silently.
 | `loco_set_phase` | onboarding, or a real phase transition |
 | `loco_set_objectives` | onboarding, or when objectives change |
 | `loco_log_work` | they finished something; also the edit path |
+| `loco_set_plan` | they agree what to do NEXT — never for things done |
 | `loco_schedule_session` | at the END of any substantial conversation |
 | `loco_confirm` | after they explicitly agree |
 

@@ -87,3 +87,21 @@ only they can see.
 If work does not fit any current objective, log it with `objective_id: null` and say
 so. A run of unaligned work is a signal the objectives are stale — surface it rather
 than forcing a fit.
+
+## Planned vs done
+
+The same vocabulary runs forwards. A **planned** Task or SEDO (`loco_set_plan`) is
+something they have agreed to do; it always serves a named objective, and Tasks may
+nest one level under a planned SEDO.
+
+The wall between the two directions is absolute:
+
+- A planned item is never work, never evidence, never public, never "done".
+- It completes only when a real work event fulfils it (`fulfils_plan_item_id`) and
+  the person confirms **both** the work and the fulfilment. "Some work toward it"
+  (`plan_item_id`) is progress, not completion — a SEDO like "deliver the leadership
+  presentation" survives research, interviews, a deck and a rehearsal, and completes
+  on the delivery.
+- If they say they intend to do something, that is a plan. If they say they did
+  something, that is work. When someone describes future work to `loco_log_work` the
+  server refuses the future date and points at `loco_set_plan` — trust it.

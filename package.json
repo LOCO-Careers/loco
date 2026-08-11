@@ -1,6 +1,6 @@
 {
   "name": "loco-careers",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Install LOCO into the agent you already use. Connects the LOCO career-record MCP server and installs the POTS methodology skill, for every client it can find.",
   "bin": {
     "loco-careers": "bin/loco.mjs"
